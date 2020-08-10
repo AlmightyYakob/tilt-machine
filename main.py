@@ -1,24 +1,10 @@
-import serial
-import subprocess
+import serial  # type: ignore
 
-XRANDR_HORIZONTAL_MODE = "normal"
-XRANDR_VERTICAL_MODE = "left"
-XRANDR_OUTPUT_DEVICE = "HDMI-0"
-
-HORIZONTAL = 0
-VERTICAL = 1
+from util import HORIZONTAL, TILT_LENGTH_THRESHOLD, determine_starting_position, rotate
 
 
-def rotate(currentPosition):
-    # TODO: Use python-xlib instead
-    rotation = XRANDR_HORIZONTAL_MODE if currentPosition == 0 else XRANDR_VERTICAL_MODE
-
-    command = ["xrandr", "--output", XRANDR_OUTPUT_DEVICE, "--rotate", rotation]
-    subprocess.check_call(command)
-
-
-def main():
-    currentPosition = HORIZONTAL
+def main(starting_position=HORIZONTAL):
+    currentPosition = starting_position
     tiltLength = 0
 
     while True:
@@ -38,7 +24,7 @@ def main():
             else:
                 tiltLength = 0
 
-        if tiltLength >= 500:
+        if tiltLength >= TILT_LENGTH_THRESHOLD:
             currentPosition = 1 - currentPosition
             tiltLength = 0
 
@@ -47,4 +33,9 @@ def main():
 
 if __name__ == "__main__":
     serialPort = serial.Serial(port="/dev/ttyACM0", baudrate=9600)
-    main()
+
+    print("Determining initial monitor orientation...")
+    starting_position = determine_starting_position(serialPort)
+
+    print("Starting tilt monitoring service...")
+    main(starting_position)
