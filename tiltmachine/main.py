@@ -1,9 +1,14 @@
 import serial  # type: ignore
 
-from util import HORIZONTAL, TILT_LENGTH_THRESHOLD, determine_starting_position, rotate
+from tiltmachine.util import (
+    HORIZONTAL,
+    TILT_LENGTH_THRESHOLD,
+    determine_starting_position,
+    rotate,
+)
 
 
-def main(starting_position=HORIZONTAL):
+def run(starting_position=HORIZONTAL):
     currentPosition = starting_position
     tiltLength = 0
 
@@ -38,4 +43,4 @@ if __name__ == "__main__":
     starting_position = determine_starting_position(serialPort)
 
     print("Starting tilt monitoring service...")
-    main(starting_position)
+    run(starting_position)
