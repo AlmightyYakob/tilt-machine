@@ -16,10 +16,10 @@ void loop() {
   int digitalVal = digitalRead(2);
   if (HIGH == digitalVal) {
     digitalWrite(ledPin, LOW); //turn the led off
-    Serial.println("0");
+    Serial.print("0");
   }
   else {
     digitalWrite(ledPin, HIGH); //turn the led on
-    Serial.println("1");
+    Serial.print("1");
   }
 }
