@@ -14,7 +14,8 @@ fn main() {
             Arg::with_name("output")
                 .short("o")
                 .long("output")
-                .help("The output that this program should operate on"),
+                .value_name("OUTPUT")
+                .help("The xrandr output that this program should operate on"),
         )
         .subcommand(SubCommand::with_name("install").about("Installs the Tilt Detection Service"))
         .subcommand(

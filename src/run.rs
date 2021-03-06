@@ -53,6 +53,7 @@ fn change_orientation(orientation: u8) {
         "normal"
     };
 
+    // TODO: Find out why this doesn't work when run by systemd
     Command::new("xrandr")
         .args(&["--output", XRANR_MONITOR, "--rotate", rotation])
         .output()
@@ -63,6 +64,9 @@ pub fn run() {
     let mut reader = TiltReader::new().expect("Couldn't open serial port reader");
     let mut orientation = FLAT;
 
+    // TODO: Add loop here to halt until x service has started
+
+    println!("Starting Tilt Detection Service!");
     loop {
         let new_orientation = reader.determine_position();
         if new_orientation != orientation {
