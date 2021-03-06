@@ -1,8 +1,9 @@
 use serial::{self, unix::TTYPort, PortSettings, SerialPort};
-use std::io::Read;
+use std::{io::Read, process::Command};
 
 const FLAT: u8 = 48;
 const VERTICAL: u8 = 49;
+const XRANR_MONITOR: &str = "HDMI-0";
 
 // How many times in a row the arduino has to register
 // a value before considering it consistent
@@ -45,11 +46,28 @@ impl TiltReader {
     }
 }
 
+fn change_orientation(orientation: u8) {
+    let rotation = if orientation == VERTICAL {
+        "left"
+    } else {
+        "normal"
+    };
+
+    Command::new("xrandr")
+        .args(&["--output", XRANR_MONITOR, "--rotate", rotation])
+        .output()
+        .expect("Failed to execute process");
+}
+
 fn main() -> Result<(), std::io::Error> {
     let mut reader = TiltReader::new()?;
+    let mut orientation = FLAT;
 
     loop {
-        let pos = reader.determine_position();
-        println!("{}", pos);
+        let new_orientation = reader.determine_position();
+        if new_orientation != orientation {
+            orientation = new_orientation;
+            change_orientation(orientation);
+        }
     }
 }
