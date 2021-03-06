@@ -59,8 +59,8 @@ fn change_orientation(orientation: u8) {
         .expect("Failed to execute process");
 }
 
-pub fn run() -> Result<(), std::io::Error> {
-    let mut reader = TiltReader::new()?;
+pub fn run() {
+    let mut reader = TiltReader::new().expect("Couldn't open serial port reader");
     let mut orientation = FLAT;
 
     loop {

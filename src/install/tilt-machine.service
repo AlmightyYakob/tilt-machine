@@ -1,6 +1,0 @@
-[Unit]
-Description=Start the Monitor Rotation Service
-
-[Service]
-ExecStart=
-Type=oneshot
